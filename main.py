@@ -62,25 +62,25 @@ def post_facesim(
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
         # 检测第一张图中的人脸
-        img1_ori = read_image_from_url(image1)
-        img2_ori = read_image_from_url(image2)
-        preds1 = fa.get_landmarks(img1_ori)
-        if preds1 is not None:
-            # 如果检测到人脸，进行对齐
-            aligned_img1 = align_face(img1_ori, preds1[0])
-        else:
-            print("第一张图未检测到人脸！")
-            return None
+        # img1_ori = read_image_from_url(image1)
+        # img2_ori = read_image_from_url(image2)
+        # preds1 = fa.get_landmarks(img1_ori)
+        # if preds1 is not None:
+        #     # 如果检测到人脸，进行对齐
+        #     aligned_img1 = align_face(img1_ori, preds1[0])
+        # else:
+        #     print("第一张图未检测到人脸！")
+        #     return None
 
-        # 检测第二张图中的人脸
-        preds2 = fa.get_landmarks(img2_ori)
-        if preds2 is not None:
-            # 如果检测到人脸，进行对齐
-            aligned_img2 = align_face(img2_ori, preds2[0])
-        else:
-            print("第二张图未检测到人脸！")
-            return None
-        result = getfacesim(aligned_img1, aligned_img2)
+        # # 检测第二张图中的人脸
+        # preds2 = fa.get_landmarks(img2_ori)
+        # if preds2 is not None:
+        #     # 如果检测到人脸，进行对齐
+        #     aligned_img2 = align_face(img2_ori, preds2[0])
+        # else:
+        #     print("第二张图未检测到人脸！")
+        #     return None
+        result = getfacesim(img1_ori, img2_ori)
         return {
             "code": 200,
             "error": None,
