@@ -42,37 +42,8 @@ if (res != MOK):
 else:
     print("ASFInitEngine sucess: {}".format(res))
 
-def read_image_from_url(url):
-    try:
-        # Fetch the image from the URL
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an error for bad responses
 
-        # Convert the image data to a NumPy array
-        image_array = np.asarray(bytearray(response.content), dtype=np.uint8)
-
-        # Decode the image array into an OpenCV format
-        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-
-        if image is None:
-            raise ValueError("Decoding the image failed, resulting in None.")
-
-        return image
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching the image from the URL: {e}")
-    except ValueError as e:
-        print(f"Error processing the image: {e}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-
-    return None
-
-def getfacesim(img1_url,img2_url):
-    img1_ori = read_image_from_url(img1_url)
-    img2_ori = read_image_from_url(img2_url)
-    img1 = aligh_image(img1_ori)
-    img2 = aligh_image(img2_ori)
+def getfacesim(img1,img2):
     #检测第一张图中的人脸
     res,detectedFaces1 = face_engine.ASFDetectFaces(img1)
     print(f"{detectedFaces1}")
