@@ -6,11 +6,8 @@
 @Author  ：herbiel
 @Date    ：2024/11/12 15:31 
 '''
-import cv2
 from  arcface.engine import *
-import requests
-from aligh import aligh_image
-import numpy as np
+
 APPID = b'4oWW5VkWg5BiqejxL2y2bzTSkgvZZefKrvR9RaHTgHJ1'
 SDKKey = b'6mwAL6TdSfRi1BmcEPjuGha8jFSS3mcygu25nLhz1kFq'
 
