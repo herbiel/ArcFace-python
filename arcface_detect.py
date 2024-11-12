@@ -78,10 +78,10 @@ def check_image_heigh(image):
 
     return None
 def getfacesim(img1_url,img2_url):
-    img1_ori = read_image_from_url(img1_url)
-    img2_ori = read_image_from_url(img2_url)
-    img1 = check_image_heigh(img1_ori)
-    img2 = check_image_heigh(img2_ori)
+    img1 = read_image_from_url(img1_url)
+    img2 = read_image_from_url(img2_url)
+    #img1 = check_image_heigh(img1_ori)
+    #img2 = check_image_heigh(img2_ori)
     #检测第一张图中的人脸
     res,detectedFaces1 = face_engine.ASFDetectFaces(img1)
     print(f"{detectedFaces1}")
