@@ -62,8 +62,8 @@ def post_facesim(
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
         # 检测第一张图中的人脸
-        # img1_ori = read_image_from_url(image1)
-        # img2_ori = read_image_from_url(image2)
+        img1_ori = read_image_from_url(image1)
+        img2_ori = read_image_from_url(image2)
         # preds1 = fa.get_landmarks(img1_ori)
         # if preds1 is not None:
         #     # 如果检测到人脸，进行对齐
