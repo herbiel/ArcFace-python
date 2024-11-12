@@ -28,7 +28,11 @@ def post_facesim(
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
         result = getfacesim(image1, image2)
-        return result
+        return {
+            "code": 200,
+            "error": None,
+            "score": str(result)
+        }
     except Exception as e:
         return {
             "code": 500,
