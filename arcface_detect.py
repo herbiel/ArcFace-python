@@ -66,10 +66,22 @@ def read_image_from_url(url):
         print(f"An unexpected error occurred: {e}")
 
     return None
+def check_image_heigh(image):
+    try:
+        height, width = image.shape[:2]
 
+        if width > height:  # 如果宽度大于高度，说明是横屏
+            image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)  # 顺时针旋转90度
+        return image
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    return None
 def getfacesim(img1_url,img2_url):
-    img1 = read_image_from_url(img1_url)
-    img2 = read_image_from_url(img2_url)
+    img1_ori = read_image_from_url(img1_url)
+    img2_ori = read_image_from_url(img2_url)
+    img1 = check_image_heigh(img1_ori)
+    img2 = check_image_heigh(img2_ori)
     #检测第一张图中的人脸
     res,detectedFaces1 = face_engine.ASFDetectFaces(img1)
     print(f"{detectedFaces1}")
