@@ -19,7 +19,7 @@ db_config = {
 }
 
 # API 配置
-api_url = 'http://192.168.51.71:8000/api/predict/facesmi'
+api_url = 'http://149.129.236.15:8000/api/predict/facesmi'
 headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ def main():
         if result and 'new_score' in result:
             new_score = result['new_score']
             # 更新数据库中的 new_score
-            update_score_in_db(old_image, new_image, new_score)
+            #update_score_in_db(old_image, new_image, new_score)
             print(f"Updated new_score for old_image: {old_image}, new_image: {new_image} to {new_score}")
 
 if __name__ == "__main__":
