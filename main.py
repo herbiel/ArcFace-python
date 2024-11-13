@@ -12,15 +12,15 @@ from pydantic import BaseModel
 from arcface_detect import getfacesim
 import cv2
 import numpy as np
-import face_alignment
+#import face_alignment
 # Create a FastAPI instance
 app = FastAPI()
 
-@app.on_event("startup")
-async def startup_event():
-    global fa
-    # 初始化人脸对齐方法
-    fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu')
+# @app.on_event("startup")
+# async def startup_event():
+#     global fa
+#     # 初始化人脸对齐方法
+#     fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu')
 
 def read_image_from_url(url):
     # 这里是读取图像的函数，具体实现根据你的需求来
