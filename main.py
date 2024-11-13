@@ -8,6 +8,9 @@
 '''
 from fastapi import FastAPI,Body,HTTPException
 from pydantic import BaseModel
+import requests
+from io import BytesIO
+from PIL import Image
 
 from arcface_detect import getfacesim
 import cv2
@@ -25,9 +28,6 @@ app = FastAPI()
 def read_image_from_url(url):
     # 这里是读取图像的函数，具体实现根据你的需求来
     # 例如，可以使用 requests 库来获取图像并使用 cv2 读取
-    import requests
-    from io import BytesIO
-    from PIL import Image
 
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -47,9 +47,7 @@ def align_face(image, landmarks):
     return aligned_image
 
 # Define a Pydantic model for the request body
-class Item(BaseModel):
-    image1: str
-    image2: str
+
 
 
 # Define a POST endpoint
