@@ -70,5 +70,4 @@ def getfacesim(img1,img2):
     #比较两个人脸的相似度
     res,score = face_engine.ASFFaceFeatureCompare(face_feature1,face_feature2)
     #print("相似度:",score)
-    print (f"{img1} and {img2} sim is {score}")
     return score

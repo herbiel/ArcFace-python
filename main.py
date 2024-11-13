@@ -79,6 +79,7 @@ def post_facesim(
         #     print("第二张图未检测到人脸！")
         #     return None
         result = getfacesim(img1_ori, img2_ori)
+        print(f"{image1} and {image2} sim is {result}")
         return {
             "code": 200,
             "error": None,
