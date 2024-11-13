@@ -1,0 +1,7 @@
+__pycache__/
+models/*
+recordings/*
+config.py
+.idea/*
+.idea
+../.DS_Store

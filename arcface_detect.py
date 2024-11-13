@@ -8,8 +8,7 @@
 '''
 from  arcface.engine import *
 
-APPID = b''
-SDKKey = b''
+from config import  APPID,SDKKey
 
 #激活接口,首次需联网激活
 res = ASFOnlineActivation(APPID, SDKKey)
