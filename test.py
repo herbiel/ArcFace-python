@@ -19,7 +19,7 @@ db_config = {
 }
 
 # API 配置
-api_url = 'http://149.129.236.15:8000/api/predict/facesmi'
+api_url = 'http://149.129.236.15:8800/api/predict/facesmi'
 headers = {
     'accept': 'application/json',
     'Content-Type': 'application/json'
