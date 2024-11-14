@@ -23,7 +23,7 @@ from config import  APPID,SDKKey
 @app.on_event("startup")
 async def startup_event():
     # 激活接口,首次需联网激活
-    global face_engine,mask
+    global face_engine_0,face_engine_90,face_engine_180,face_engine_270,mask
     res = ASFOnlineActivation(APPID, SDKKey)
     if (MOK != res and MERR_ASF_ALREADY_ACTIVATED != res):
         print("ASFActivation fail: {}".format(res))
@@ -39,17 +39,35 @@ async def startup_event():
         print(f"{activeFileInfo}")
 
     # 获取人脸识别引擎
-    face_engine = ArcFace()
+    face_engine_0 = ArcFace()
+    face_engine_90 = ArcFace()
+    face_engine_270 = ArcFace()
+    face_engine_180 = ArcFace()
 
     # 需要引擎开启的功能
     mask = ASF_FACE_DETECT | ASF_FACERECOGNITION
 
     # 初始化接口
-    res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_0_ONLY, 30, 10, mask)
-    if (res != MOK):
-        print("ASFInitEngine fail: {}".format(res))
+    res_0 = face_engine_0.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_0_ONLY, 30, 10, mask)
+    if (res_0 != MOK):
+        print("ASFInitEngine fail: {}".format(res_0))
     else:
-        print("ASFInitEngine sucess: {}".format(res))
+        print("ASFInitEngine sucess: {}".format(res_0))
+    res_90 = face_engine_90.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_90_ONLY, 30, 10, mask)
+    if (res_90 != MOK):
+        print("ASFInitEngine fail: {}".format(res_90))
+    else:
+        print("ASFInitEngine sucess: {}".format(res_90))
+    res_270 = face_engine_270.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_90_ONLY, 30, 10, mask)
+    if (res_270 != MOK):
+        print("ASFInitEngine fail: {}".format(res_270))
+    else:
+        print("ASFInitEngine sucess: {}".format(res_270))
+    res_180 = face_engine_180.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_180_ONLY, 30, 10, mask)
+    if (res_180 != MOK):
+        print("ASFInitEngine fail: {}".format(res_180))
+    else:
+        print("ASFInitEngine sucess: {}".format(res_180))
 
 
 async def read_image_from_url(url):
@@ -61,7 +79,7 @@ async def read_image_from_url(url):
 # Define a Pydantic model for the request body
 
 def getfacesim(img1, img2):
-    orientations = [ASF_OP_0_ONLY, ASF_OP_90_ONLY, ASF_OP_180_ONLY, ASF_OP_270_ONLY]
+    orientations = [face_engine_0, face_engine_90, face_engine_180, face_engine_270]
     face_feature1 = None
     face_feature2 = None
 
@@ -69,17 +87,17 @@ def getfacesim(img1, img2):
     for i, orientation in enumerate(orientations):
         print(f"Trying orientation {i + 1}/{len(orientations)} for the first image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
+        res = orientation
         if res != MOK:
             print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
             return None
 
-        res, detectedFaces1 = face_engine.ASFDetectFaces(img1)
+        res, detectedFaces1 = orientation.ASFDetectFaces(img1)
         if res == MOK and detectedFaces1.faceRect:
             single_detected_face1 = ASF_SingleFaceInfo()
             single_detected_face1.faceRect = detectedFaces1.faceRect[0]
             single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
-            res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
+            res, face_feature1 = orientation.ASFFaceFeatureExtract(img1, single_detected_face1)
             if res == 90127:
                 print("Detected specific error code 90127, skipping further attempts for the second image.")
                 break
@@ -98,12 +116,12 @@ def getfacesim(img1, img2):
     for i, orientation in enumerate(orientations):
         print(f"Trying orientation {i + 1}/{len(orientations)} for the second image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
+        res = orientation
         if res != MOK:
             print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
             return None
 
-        res, detectedFaces2 = face_engine.ASFDetectFaces(img2)
+        res, detectedFaces2 = orientation.ASFDetectFaces(img2)
 
         # 检查特定错误代码
         if res == 90127:
@@ -114,7 +132,7 @@ def getfacesim(img1, img2):
             single_detected_face2 = ASF_SingleFaceInfo()
             single_detected_face2.faceRect = detectedFaces2.faceRect[0]
             single_detected_face2.faceOrient = detectedFaces2.faceOrient[0]
-            res, face_feature2 = face_engine.ASFFaceFeatureExtract(img2, single_detected_face2)
+            res, face_feature2 = orientation.ASFFaceFeatureExtract(img2, single_detected_face2)
             if res == MOK:
                 break  # 成功提取特征，退出循环
             else:
