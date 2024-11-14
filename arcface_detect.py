@@ -98,7 +98,7 @@ def getfacesim(img1,img2):
         if (res==MOK):
             pass
         else:
-            res, face_feature1 = face_engine.ASFFaceFeatureExtract(face_align_V2(img2), single_detected_face1)
+            res, face_feature2 = face_engine.ASFFaceFeatureExtract(face_align_V2(img2), single_detected_face2)
             print ("ASFFaceFeatureExtract 2 fail: {}".format(res))
     else:
         print("ASFDetectFaces 2 fail: {}".format(res))
