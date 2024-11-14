@@ -126,6 +126,7 @@ def read_image_from_url(url):
 
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
+    img = img.resize((640, 480))
     return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
 
