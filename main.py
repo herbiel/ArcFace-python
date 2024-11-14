@@ -14,18 +14,17 @@ from PIL import Image
 
 from arcface_detect import getfacesim
 import cv2
-import face_alignment
 from skimage import io
 import numpy as np
 # Create a FastAPI instance
 app = FastAPI()
 
-@app.on_event("startup")
-async def startup_event():
-     global fa
-     # 初始化人脸对齐方法
-     fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu',face_detector='blazeface')
-
+# @app.on_event("startup")
+# async def startup_event():
+#      global fa
+#      # 初始化人脸对齐方法
+#      fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu',face_detector='blazeface')
+#
 
 def face_align_V2(img):
     input_image = io.imread(img)  # 替换为你的图像路径
