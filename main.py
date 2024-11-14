@@ -10,7 +10,7 @@ from fastapi import FastAPI,Body,HTTPException
 import requests
 from io import BytesIO
 from PIL import Image
-
+import httpx
 #from arcface_detect import getfacesim
 import cv2
 import numpy as np
@@ -60,20 +60,12 @@ def getfacesim(img1, img2):
     for i, orientation in enumerate(orientations):
         print(f"Trying orientation {i + 1}/{len(orientations)} for the first image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
-        if res != MOK:
-            print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
-            return None
-
         res, detectedFaces1 = face_engine.ASFDetectFaces(img1)
         if res == MOK and detectedFaces1.faceRect:
             single_detected_face1 = ASF_SingleFaceInfo()
             single_detected_face1.faceRect = detectedFaces1.faceRect[0]
             single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
             res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
-            if res == 90127:
-                print("Detected specific error code 90127, skipping further attempts for the second image.")
-                break
             if res == MOK:
                 break  # 成功提取特征，退出循环
             else:
@@ -89,17 +81,7 @@ def getfacesim(img1, img2):
     for i, orientation in enumerate(orientations):
         print(f"Trying orientation {i + 1}/{len(orientations)} for the second image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
-        if res != MOK:
-            print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
-            return None
-
         res, detectedFaces2 = face_engine.ASFDetectFaces(img2)
-
-        # 检查特定错误代码
-        if res == 90127:
-            print("Detected specific error code 90127, skipping further attempts for the second image.")
-            break
 
         if res == MOK and detectedFaces2.faceRect:
             single_detected_face2 = ASF_SingleFaceInfo()
@@ -120,15 +102,12 @@ def getfacesim(img1, img2):
     # 比较两个人脸的相似度
     res, score = face_engine.ASFFaceFeatureCompare(face_feature1, face_feature2)
     return score  # 返回相似度得分
-def read_image_from_url(url):
-    # 这里是读取图像的函数，具体实现根据你的需求来
-    # 例如，可以使用 requests 库来获取图像并使用 cv2 读取
 
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
-    img = img.resize((640, 480))
-    return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-
+async def read_image_from_url(url):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        img = Image.open(BytesIO(response.content))
+        return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
 # Define a Pydantic model for the request body
 
@@ -136,7 +115,7 @@ def read_image_from_url(url):
 
 # Define a POST endpoint
 @app.post("/api/predict/facesmi")
-def post_facesim(
+async def post_facesim(
         image1: str = Body(embed=True,alias="image1", min_length=10),
         image2: str = Body(embed=True,alias="image2", min_length=10),
 ):
@@ -144,8 +123,8 @@ def post_facesim(
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
         # 检测第一张图中的人脸
-        img1_ori = read_image_from_url(image1)
-        img2_ori = read_image_from_url(image2)
+        img1_ori = await read_image_from_url(image1)
+        img2_ori = await read_image_from_url(image2)
         result = getfacesim(img1_ori, img2_ori)
         print(f"{image1} and {image2} sim is {result}")
         del img1_ori
