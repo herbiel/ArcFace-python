@@ -72,7 +72,7 @@ def face_align_V2(input_image):
         center = (w // 2, h // 2)
         M = cv2.getRotationMatrix2D(center, angle, 1.0)
         rotated_image = cv2.warpAffine(input_image, M, (w, h))
-        return cv2.cvtColor(rotated_image, cv2.COLOR_RGB2BGR)
+        return rotated_image
 def getfacesim(img1,img2):
     #检测第一张图中的人脸
     res,detectedFaces1 = face_engine.ASFDetectFaces(img1)
