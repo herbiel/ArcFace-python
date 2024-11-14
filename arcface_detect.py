@@ -84,6 +84,7 @@ def getfacesim(img1,img2):
         single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
         res ,face_feature1= face_engine.ASFFaceFeatureExtract(img1,single_detected_face1)
         if (res!=MOK):
+            res, face_feature1 = face_engine.ASFFaceFeatureExtract(face_align_V2(img1), single_detected_face1)
             print ("ASFFaceFeatureExtract 1 fail: {}".format(res))
     else:
         print("ASFDetectFaces 1 fail: {}".format(res))
@@ -98,6 +99,7 @@ def getfacesim(img1,img2):
         if (res==MOK):
             pass
         else:
+            res, face_feature1 = face_engine.ASFFaceFeatureExtract(face_align_V2(img2), single_detected_face1)
             print ("ASFFaceFeatureExtract 2 fail: {}".format(res))
     else:
         print("ASFDetectFaces 2 fail: {}".format(res))
