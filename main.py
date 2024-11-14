@@ -148,6 +148,8 @@ def post_facesim(
         img2_ori = read_image_from_url(image2)
         result = getfacesim(img1_ori, img2_ori)
         print(f"{image1} and {image2} sim is {result}")
+        del img1_ori
+        del img2_ori
         return {
             "code": 200,
             "error": None,
