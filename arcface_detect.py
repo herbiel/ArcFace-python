@@ -59,6 +59,9 @@ def getfacesim(img1, img2):
             single_detected_face1.faceRect = detectedFaces1.faceRect[0]
             single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
             res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
+            if res == 90127:
+                print("Detected specific error code 90127, skipping further attempts for the second image.")
+                break
             if res == MOK:
                 break  # 成功提取特征，退出循环
             else:
@@ -80,6 +83,12 @@ def getfacesim(img1, img2):
             return None
 
         res, detectedFaces2 = face_engine.ASFDetectFaces(img2)
+
+        # 检查特定错误代码
+        if res == 90127:
+            print("Detected specific error code 90127, skipping further attempts for the second image.")
+            break
+
         if res == MOK and detectedFaces2.faceRect:
             single_detected_face2 = ASF_SingleFaceInfo()
             single_detected_face2.faceRect = detectedFaces2.faceRect[0]
