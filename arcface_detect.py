@@ -59,9 +59,6 @@ def getfacesim(img1, img2):
             single_detected_face1.faceRect = detectedFaces1.faceRect[0]
             single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
             res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
-            if res == 90127:
-                print("Detected specific error code 90127, skipping further attempts for the second image.")
-                break
             if res == MOK:
                 break  # 成功提取特征，退出循环
             else:
@@ -108,3 +105,4 @@ def getfacesim(img1, img2):
     # 比较两个人脸的相似度
     res, score = face_engine.ASFFaceFeatureCompare(face_feature1, face_feature2)
     return score  # 返回相似度得分
+
