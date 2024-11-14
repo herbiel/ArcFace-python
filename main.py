@@ -23,7 +23,7 @@ from config import  APPID,SDKKey
 @app.on_event("startup")
 async def startup_event():
     # 激活接口,首次需联网激活
-    global face_engine
+    global face_engine,mask
     res = ASFOnlineActivation(APPID, SDKKey)
     if (MOK != res and MERR_ASF_ALREADY_ACTIVATED != res):
         print("ASFActivation fail: {}".format(res))
