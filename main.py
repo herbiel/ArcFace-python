@@ -26,33 +26,6 @@ app = FastAPI()
 #      fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu',face_detector='blazeface')
 #
 
-def face_align_V2(img):
-    input_image = io.imread(img)  # 替换为你的图像路径
-
-    # 获取人脸关键点
-    preds = fa.get_landmarks(input_image)
-
-    # 检查是否检测到人脸
-    if preds is not None and len(preds) > 0:
-        # 取第一个检测到的人脸
-        landmarks = preds[0]
-
-        # 计算眼睛的坐标
-        left_eye = landmarks[36:42].mean(axis=0)  # 左眼的关键点
-        right_eye = landmarks[42:48].mean(axis=0)  # 右眼的关键点
-
-        # 计算眼睛的角度
-        dy = right_eye[1] - left_eye[1]
-        dx = right_eye[0] - left_eye[0]
-        angle = np.degrees(np.arctan2(dy, dx))  # 计算角度
-
-        # 旋转图像
-        (h, w) = input_image.shape[:2]
-        center = (w // 2, h // 2)
-        M = cv2.getRotationMatrix2D(center, angle, 1.0)
-        rotated_image = cv2.warpAffine(input_image, M, (w, h))
-        return cv2.cvtColor(rotated_image, cv2.COLOR_RGB2BGR)
-
 
 def read_image_from_url(url):
     # 这里是读取图像的函数，具体实现根据你的需求来

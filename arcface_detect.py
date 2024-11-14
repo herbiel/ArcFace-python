@@ -48,8 +48,7 @@ else:
 
 fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, flip_input=False,device='cpu',face_detector='blazeface')
 
-def face_align_V2(img):
-    input_image = io.imread(img)  # 替换为你的图像路径
+def face_align_V2(input_image):
 
     # 获取人脸关键点
     preds = fa.get_landmarks(input_image)
