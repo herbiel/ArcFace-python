@@ -10,10 +10,9 @@ from fastapi import FastAPI,Body,HTTPException
 import requests
 from io import BytesIO
 from PIL import Image
-import httpx
-#from arcface_detect import getfacesim
 import cv2
 import numpy as np
+from check_face import find_faces_by_rotation
 app = FastAPI()
 
 from  arcface.engine import *
@@ -52,75 +51,59 @@ async def startup_event():
         print("ASFInitEngine sucess: {}".format(res))
 
 
-async def read_image_from_url(url):
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        img = Image.open(BytesIO(response.content))
-        return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
 
 # Define a Pydantic model for the request body
 
-def getfacesim(img1, img2):
-    orientations = [ASF_OP_0_ONLY, ASF_OP_90_ONLY, ASF_OP_180_ONLY, ASF_OP_270_ONLY]
+def getfacesim(img1, img2,img1_url,img2_url):
     face_feature1 = None
     face_feature2 = None
 
     # 检测第一张图中的人脸
-    for i, orientation in enumerate(orientations):
-        print(f"Trying orientation {i + 1}/{len(orientations)} for the first image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
-        if res != MOK:
-            print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
-            return None
 
-        res, detectedFaces1 = face_engine.ASFDetectFaces(img1)
-        if res == MOK and detectedFaces1.faceRect:
-            single_detected_face1 = ASF_SingleFaceInfo()
-            single_detected_face1.faceRect = detectedFaces1.faceRect[0]
-            single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
-            res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
-            if res == 90127:
-                print("Detected specific error code 90127, skipping further attempts for the second image.")
-                break
-            if res == MOK:
-                break  # 成功提取特征，退出循环
-            else:
-                print("ASFFaceFeatureExtract 1 fail: {}".format(res))
+    res, detectedFaces1 = face_engine.ASFDetectFaces(img1)
+    if res == MOK and detectedFaces1.faceRect:
+        single_detected_face1 = ASF_SingleFaceInfo()
+        single_detected_face1.faceRect = detectedFaces1.faceRect[0]
+        single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
+        res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
+        if res == 90127:
+            print("Detected specific error code 90127, skipping further attempts for {}.".format(img1_url,))
+        elif res == 0:
+            pass
         else:
-            print("ASFDetectFaces 1 fail for orientation {}: {}".format(orientation, res))
+            print("ASFFaceFeatureExtract 1 on {} fail : {}".format(img1_url,res))
+    else:
+        print("ASFDetectFaces 1 fail for on {}: {}".format(img1_url, res))
 
     if face_feature1 is None:
         print("No valid face feature extracted from the first image.")
         return None
 
     # 检测第二张图中的人脸
-    for i, orientation in enumerate(orientations):
-        print(f"Trying orientation {i + 1}/{len(orientations)} for the second image.")
 
-        res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, orientation, 30, 10, mask)
-        if res != MOK:
-            print("ASFInitEngine fail for orientation {}: {}".format(orientation, res))
-            return None
 
-        res, detectedFaces2 = face_engine.ASFDetectFaces(img2)
+    res, detectedFaces2 = face_engine.ASFDetectFaces(img2)
 
-        # 检查特定错误代码
+    # 检查特定错误代码
+    if res == 90127:
+        print("Detected specific error code 90127, skipping further attempts for the second image.")
+
+
+    if res == MOK and detectedFaces2.faceRect:
+        single_detected_face2 = ASF_SingleFaceInfo()
+        single_detected_face2.faceRect = detectedFaces2.faceRect[0]
+        single_detected_face2.faceOrient = detectedFaces2.faceOrient[0]
+        res, face_feature2 = face_engine.ASFFaceFeatureExtract(img2, single_detected_face2)
         if res == 90127:
-            print("Detected specific error code 90127, skipping further attempts for the second image.")
-            break
-
-        if res == MOK and detectedFaces2.faceRect:
-            single_detected_face2 = ASF_SingleFaceInfo()
-            single_detected_face2.faceRect = detectedFaces2.faceRect[0]
-            single_detected_face2.faceOrient = detectedFaces2.faceOrient[0]
-            res, face_feature2 = face_engine.ASFFaceFeatureExtract(img2, single_detected_face2)
-            if res == MOK:
-                break  # 成功提取特征，退出循环
-            else:
-                print("ASFFaceFeatureExtract 2 fail: {}".format(res))
+            print("Detected specific error code 90127, skipping further attempts for {}.".format(img2_url, ))
+        elif res == 0:
+            pass
         else:
-            print("ASFDetectFaces 2 fail for orientation {}: {}".format(orientation, res))
+            print("ASFFaceFeatureExtract 2 on {} fail : {}".format(img2_url, res))
+    else:
+        print("ASFDetectFaces 2 fail for on {}: {}".format(img2_url, res))
 
     if face_feature2 is None:
         print("No valid face feature extracted from the second image.")
@@ -140,18 +123,30 @@ async def post_facesim(
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
-        # 检测第一张图中的人脸
-        img1_ori = await read_image_from_url(image1)
-        img2_ori = await read_image_from_url(image2)
-        result = getfacesim(img1_ori, img2_ori)
+        img1_ori = find_faces_by_rotation(image1)
+        img2_ori = find_faces_by_rotation(image2)
+        if img1_ori is None or img1_ori.size == 0:
+            return {
+                "code": 200,
+                "error": "First image does not contain a detectable face",
+                "score": None
+            }
+        if img2_ori is None or img2_ori.size == 0:
+            return {
+                "code": 200,
+                "error": "Second image does not contain a detectable face",
+                "score": None
+            }
+
+        result = getfacesim(img1_ori, img2_ori,image1,image2)
         print(f"{image1} and {image2} sim is {result}")
-        del img1_ori
-        del img2_ori
-        return {
-            "code": 200,
-            "error": None,
-            "score": str(result)
-        }
+        output = {
+                    "code": 200,
+                    "error": None,
+                    "score": str(result)
+                }
+
+        return output
     except Exception as e:
         return {
             "code": 500,
