@@ -43,13 +43,14 @@ def detect_faces_dlib(image):
 def load_image(image_source):
     """加载图像，可以是 URL 或本地路径"""
     try:
-        if image_source.startswith(('http://', 'https://')):
-            response = requests.get(image_source)
-            response.raise_for_status()  # 检查请求是否成功
-            image = Image.open(BytesIO(response.content))
-            image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-        else:
-            image = cv2.imread(image_source)
+        response = requests.get(image_source)
+        response.raise_for_status()  # Raise an error for bad responses
+
+        # Convert the image data to a NumPy array
+        image_array = np.asarray(bytearray(response.content), dtype=np.uint8)
+
+        # Decode the image array into an OpenCV format
+        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
 
         if image is None:
             raise ValueError("Error: Image not found or unable to read.")
