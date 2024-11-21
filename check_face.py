@@ -63,7 +63,18 @@ def load_image(image_source):
     except Exception as e:
         logging.error(f"Failed to load image from {image_source}: {e}")
         return None
+def read_image_from_url(url):
+    # Fetch the image from the URL
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an error for bad responses
 
+    # Convert the image data to a NumPy array
+    image_array = np.asarray(bytearray(response.content), dtype=np.uint8)
+
+    # Decode the image array into an OpenCV format
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+
+    return image
 def find_faces_by_rotation(image_source):
     """顺时针旋转图像直到检测到人脸"""
     output = None
@@ -75,7 +86,7 @@ def find_faces_by_rotation(image_source):
 
     if faces != 0:
         logging.info(f"Detected  face(s) 111111")
-        return faces,image_source
+        return faces,image
     else:
         # 尝试旋转图像
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
