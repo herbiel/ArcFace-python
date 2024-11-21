@@ -67,6 +67,7 @@ def detect_face_number_from_url(img_url):
     if res == MOK:
         faceNum = detectedFaces1.faceNum
         if (res != MOK):
+            faceNum = 0
             print("ASFFaceFeatureExtract {}  fail: {}".format(img_url,res))
     else:
         faceNum = 0
