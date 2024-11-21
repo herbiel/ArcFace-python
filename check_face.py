@@ -65,17 +65,23 @@ def find_faces_by_rotation(image_source):
         return None
 
     # 尝试不同的旋转角度
-    for angle in range(0, 360, 90):  # 每次旋转90度
-        rotated_image = rotate_image(image, angle)
-        faces = detect_faces_dlib(rotated_image)
+    faces = detect_faces_dlib(image)
 
-        if faces:
-            logging.info(f"Detected {len(faces)} face(s) at angle {angle} degrees.")
-            # 显示检测到的人脸
-            for face in faces:
-                x, y, w, h = (face.left(), face.top(), face.width(), face.height())
-                cv2.rectangle(rotated_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            return cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)  # 返回检测到人脸的图像
+    if faces:
+        logging.info(f"Detected {len(faces)} face(s) ")
+        return image
+    else:
+        for angle in range(0, 360, 90):  # 每次旋转90度
+            rotated_image = rotate_image(image, angle)
+            faces = detect_faces_dlib(rotated_image)
+
+            if faces:
+                logging.info(f"Detected {len(faces)} face(s) at angle {angle} degrees.")
+                # 显示检测到的人脸
+                for face in faces:
+                    x, y, w, h = (face.left(), face.top(), face.width(), face.height())
+                    cv2.rectangle(rotated_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                return cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)  # 返回检测到人脸的图像
 
     logging.warning("No faces detected after rotating through all angles.")
     return None  # 如果没有检测到人脸，返回 None
