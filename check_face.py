@@ -86,14 +86,14 @@ def find_faces_by_rotation(image_source):
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
             rotated_image = rotate_image(image, angle)
             #faces = detect_faces_dlib(rotated_image)
-            faces_info = get_face_feature(rotated_image,image_source)
+            face_number = get_face_feature(rotated_image,image_source)
 
-            if faces_info.faceNum != 0:
-                print(f"faces_info.faceNum is {faces_info.faceNum}")
+            if face_number != 0:
+                print(f"faces_info.faceNum is {face_number}")
                 logging.info(f"Detected  face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
 
-                return faces_info.faceNum,rotated_image
+                return face_number.faceNum,rotated_image
 
 
 # 调用函数，传入图像的 URL 或本地路径
