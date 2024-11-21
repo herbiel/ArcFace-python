@@ -79,7 +79,7 @@ def find_faces_by_rotation(image_source):
     faces = detect_face_number_from_url(image_source)
 
     if faces != 0:
-        logging.info(f"Detected  face(s) 111111")
+        logging.info(f"{image_source} Detected  face(s) 111111")
         return faces,image
     else:
         # 尝试旋转图像
