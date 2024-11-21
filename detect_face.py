@@ -75,7 +75,7 @@ def get_face_feature_from_url(img_url):
     else:
         number = 0
         print("ASFDetectFaces 1 fail: {}".format(res))
-    return number,img_url
+    return number
 def get_face_feature(img,img_url):
     # 检测第一张图中的人脸
 
