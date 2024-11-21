@@ -150,6 +150,8 @@ async def post_facesim(
 
         facenumber1 = check_face(img1_ori)
         facenumber2 = check_face(img1_ori)
+        rotation_image1 = None
+        rotation_image2 = None
         if facenumber1 == 0:
             rotation_image1 = find_faces_by_rotation(image1)
         elif facenumber2 == 0:
