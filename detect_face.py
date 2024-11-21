@@ -59,7 +59,6 @@ def read_image_from_url(url):
 
 def detect_face_number_from_url(img_url):
     img = read_image_from_url(img_url)
-    faceNum = None
     # 检测第一张图中的人脸
     res, detectedFaces1 = face_engine.ASFDetectFaces(img)
 
@@ -70,6 +69,7 @@ def detect_face_number_from_url(img_url):
         if (res != MOK):
             print("ASFFaceFeatureExtract {}  fail: {}".format(img_url,res))
     else:
+        faceNum = 0
         print("ASFDetectFaces {} fail: {}".format(img_url,res))
     return faceNum
 
