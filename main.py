@@ -125,19 +125,25 @@ async def post_facesim(
     try:
         num1,img1_ori = find_faces_by_rotation(image1)
         num2,img2_ori = find_faces_by_rotation(image2)
-        if num1 == 0:
+        if num1 != 1 and num2 != 1:
+            return {
+                "code": 200,
+                "error": "ALL image does not contain a detectable face",
+                "score": None
+            }
+        elif num1 == 0:
             return  {
                 "code": 200,
                 "error": "First image does not contain a detectable face",
                 "score": None
             }
-        if num2 == 0:
+        elif num2 == 0:
             return  {
                 "code": 200,
                 "error": "Second image does not contain a detectable face",
                 "score": None
             }
-        if num1 == 1 and num2 == 1:
+        elif num1 == 1 and num2 == 1:
             result = getfacesim(img1_ori, img2_ori,image1,image2)
             print(f"{image1} and {image2} sim is {result}")
             return  {
@@ -145,12 +151,6 @@ async def post_facesim(
                         "error": "None",
                         "score": str(result)
                     }
-        elif num1 != 1 and num2 != 1:
-            return {
-                "code": 200,
-                "error": "ALL image does not contain a detectable face",
-                "score": None
-            }
         else:
             return {
                 "code": 500,
