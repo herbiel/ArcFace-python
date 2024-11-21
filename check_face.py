@@ -82,7 +82,7 @@ def find_faces_by_rotation(image_source):
                 output = cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)  # 返回检测到人脸的图像
             else:
                 output = None
-        logging.warning("No faces detected after rotating through all angles.")
+        logging.warning("No faces detected after rotating through all angles.222222")
     return output  # 如果没有检测到人脸，返回 None
 
 # 调用函数，传入图像的 URL 或本地路径
