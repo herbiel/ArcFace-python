@@ -21,7 +21,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 import logging
-from detect_face import detect_face_number
+from detect_face import detect_face_number_from_url,detect_face_number
 # 设置日志记录
 logging.basicConfig(level=logging.INFO)
 
@@ -65,7 +65,7 @@ def find_faces_by_rotation(image_source):
     print(f"load image is {image}")
     # 尝试检测原始图像中的人脸
     #faces = detect_faces_dlib(image)
-    faces = detect_face_number(image_source)
+    faces = detect_face_number_from_url(image_source)
 
     if faces != 0:
         logging.info(f"Detected {len(faces)} face(s) 111111")
@@ -75,16 +75,13 @@ def find_faces_by_rotation(image_source):
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
             rotated_image = rotate_image(image, angle)
             #faces = detect_faces_dlib(rotated_image)
-            faces = detect_face_number(image_source)
+            faces_info = detect_face_number(rotated_image,image_source)
 
-            if faces != 0:
+            if faces_info.faceNum != 0:
                 logging.info(f"Detected {len(faces)} face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
-                for face in faces:
-                    x, y, w, h = (face.left(), face.top(), face.width(), face.height())
-                    cv2.rectangle(rotated_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                output = cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)
-                return output  # 检测到人脸时立即返回
+
+                return rotated_image
     logging.warning("No faces detected after rotating through all angles.222222")
     print(f"output is {output}")
     return output  # 最后如果仍未检测到人脸，返回 None
