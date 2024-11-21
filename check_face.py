@@ -62,28 +62,29 @@ def find_faces_by_rotation(image_source):
     """顺时针旋转图像直到检测到人脸"""
     output = None
     image = load_image(image_source)
-    # 尝试不同的旋转角度
+    # 尝试检测原始图像中的人脸
     faces = detect_faces_dlib(image)
 
     if faces:
         logging.info(f"Detected {len(faces)} face(s) 111111")
         output = image
+        return output  # 直接返回结果，避免继续处理
     else:
-        for angle in range(0, 360, 90):  # 每次旋转90度
+        # 尝试旋转图像
+        for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
             rotated_image = rotate_image(image, angle)
             faces = detect_faces_dlib(rotated_image)
 
             if faces:
                 logging.info(f"Detected {len(faces)} face(s) at angle {angle} degrees.")
-                # 显示检测到的人脸
+                # 标注检测到的人脸
                 for face in faces:
                     x, y, w, h = (face.left(), face.top(), face.width(), face.height())
                     cv2.rectangle(rotated_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                output = cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)  # 返回检测到人脸的图像
-            else:
-                output = None
-        logging.warning("No faces detected after rotating through all angles.222222")
-    return output  # 如果没有检测到人脸，返回 None
+                output = cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)
+                return output  # 检测到人脸时立即返回
+    logging.warning("No faces detected after rotating through all angles.222222")
+    return output  # 最后如果仍未检测到人脸，返回 None
 
 # 调用函数，传入图像的 URL 或本地路径
 # img = find_faces_by_rotation('https://monas-001.oss-ap-southeast-5.aliyuncs.com/image/025166536f5138cc493e71736ece4da1.jpeg')
