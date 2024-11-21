@@ -21,7 +21,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 import logging
-from detect_face import detect_face_number_from_url,detect_face_number
+from detect_face import get_face_feature_from_url,get_face_feature
 # 设置日志记录
 logging.basicConfig(level=logging.INFO)
 
@@ -76,7 +76,7 @@ def find_faces_by_rotation(image_source):
     print(f"load image is {image}")
     # 尝试检测原始图像中的人脸
     #faces = detect_faces_dlib(image)
-    faces = detect_face_number_from_url(image_source)
+    faces = get_face_feature_from_url(image_source)
 
     if faces == 1:
         logging.info(f"{image_source} Detected  face(s) 111111")
@@ -86,7 +86,7 @@ def find_faces_by_rotation(image_source):
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
             rotated_image = rotate_image(image, angle)
             #faces = detect_faces_dlib(rotated_image)
-            faces_info = detect_face_number(rotated_image,image_source)
+            faces_info = get_face_feature(rotated_image,image_source)
 
             if faces_info.faceNum != 0:
                 print(f"faces_info.faceNum is {faces_info.faceNum}")
