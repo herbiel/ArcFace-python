@@ -78,5 +78,6 @@ def detect_face_number(img,img_url):
     res, detectedFaces = face_engine.ASFDetectFaces(img)
 
     if res != MOK:
+        detectedFaces = 0
         print("ASFDetectFaces {} fail: {}".format(img_url,res))
     return detectedFaces
