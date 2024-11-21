@@ -69,7 +69,7 @@ def find_faces_by_rotation(image_source):
 
     if faces != 0:
         logging.info(f"Detected  face(s) 111111")
-        output = image
+        return image_source
     else:
         # 尝试旋转图像
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
@@ -82,9 +82,7 @@ def find_faces_by_rotation(image_source):
                 # 标注检测到的人脸
 
                 return rotated_image
-    logging.warning("No faces detected after rotating through all angles.222222")
-    print(f"output is {output}")
-    return output  # 最后如果仍未检测到人脸，返回 None
+
 
 # 调用函数，传入图像的 URL 或本地路径
 # img = find_faces_by_rotation('https://monas-001.oss-ap-southeast-5.aliyuncs.com/image/025166536f5138cc493e71736ece4da1.jpeg')
