@@ -122,34 +122,34 @@ async def post_facesim(
 ):
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
-    try:
-        img1_ori = find_faces_by_rotation(image1)
-        img2_ori = find_faces_by_rotation(image2)
-        if img1_ori is None or img1_ori.size == 0:
-            return {
-                "code": 200,
-                "error": "First image does not contain a detectable face",
-                "score": None
-            }
-        if img2_ori is None or img2_ori.size == 0:
-            return {
-                "code": 200,
-                "error": "Second image does not contain a detectable face",
-                "score": None
-            }
-        ###
-        result = getfacesim(img1_ori, img2_ori,image1,image2)
-        print(f"{image1} and {image2} sim is {result}")
-        output = {
-                    "code": 200,
-                    "error": None,
-                    "score": str(result)
-                }
-
-        return output
-    except Exception as e:
+    #try:
+    img1_ori = find_faces_by_rotation(image1)
+    img2_ori = find_faces_by_rotation(image2)
+    if img1_ori is None or img1_ori.size == 0:
         return {
-            "code": 500,
-            "error": str(e),
+            "code": 200,
+            "error": "First image does not contain a detectable face",
             "score": None
         }
+    if img2_ori is None or img2_ori.size == 0:
+        return {
+            "code": 200,
+            "error": "Second image does not contain a detectable face",
+            "score": None
+        }
+    ###
+    result = getfacesim(img1_ori, img2_ori,image1,image2)
+    print(f"{image1} and {image2} sim is {result}")
+    output = {
+                "code": 200,
+                "error": None,
+                "score": str(result)
+            }
+
+    return output
+    # except Exception as e:
+    #     return {
+    #         "code": 500,
+    #         "error": str(e),
+    #         "score": None
+    #     }
