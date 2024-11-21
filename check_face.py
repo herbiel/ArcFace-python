@@ -89,6 +89,7 @@ def find_faces_by_rotation(image_source):
             faces_info = detect_face_number(rotated_image,image_source)
 
             if faces_info.faceNum != 0:
+                print(f"faces_info.faceNum is {faces_info.faceNum}")
                 logging.info(f"Detected  face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
 
