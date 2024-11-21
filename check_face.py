@@ -75,7 +75,7 @@ def find_faces_by_rotation(image_source):
 
     if faces != 0:
         logging.info(f"Detected  face(s) 111111")
-        return image_source
+        return faces,image_source
     else:
         # 尝试旋转图像
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
@@ -87,7 +87,7 @@ def find_faces_by_rotation(image_source):
                 logging.info(f"Detected  face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
 
-                return rotated_image
+                return faces_info.faceNum,rotated_image
 
 
 # 调用函数，传入图像的 URL 或本地路径

@@ -123,15 +123,15 @@ async def post_facesim(
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     #try:
-    img1_ori = find_faces_by_rotation(image1)
-    img2_ori = find_faces_by_rotation(image2)
-    if img1_ori is None or img1_ori.size == 0:
+    num1,img1_ori = find_faces_by_rotation(image1)
+    num2,img2_ori = find_faces_by_rotation(image2)
+    if num1 == 0:
         return {
             "code": 200,
             "error": "First image does not contain a detectable face",
             "score": None
         }
-    if img2_ori is None or img2_ori.size == 0:
+    if num2 == 0:
         return {
             "code": 200,
             "error": "Second image does not contain a detectable face",
