@@ -57,28 +57,40 @@ def read_image_from_url(url):
     return image
 
 
-def detect_face_number_from_url(img_url):
+def get_face_feature_from_url(img_url):
     img = read_image_from_url(img_url)
-    # 检测第一张图中的人脸
     res, detectedFaces1 = face_engine.ASFDetectFaces(img)
-
 
     print(f"{detectedFaces1}")
     if res == MOK:
-        faceNum = detectedFaces1.faceNum
+        single_detected_face1 = ASF_SingleFaceInfo()
+        single_detected_face1.faceRect = detectedFaces1.faceRect[0]
+        single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
+        res, face_feature1 = face_engine.ASFFaceFeatureExtract(img, single_detected_face1)
+        number = 1
         if (res != MOK):
-            faceNum = 0
-            print("ASFFaceFeatureExtract {}  fail: {}".format(img_url,res))
+            number = 0
+            print("ASFFaceFeatureExtract 1 fail: {}".format(res))
     else:
-        faceNum = 0
-        print("ASFDetectFaces {} fail: {}".format(img_url,res))
-    return faceNum
-
-def detect_face_number(img,img_url):
+        number = 0
+        print("ASFDetectFaces 1 fail: {}".format(res))
+    return number,img_url
+def get_face_feature(img,img_url):
     # 检测第一张图中的人脸
-    res, detectedFaces = face_engine.ASFDetectFaces(img)
 
-    if res != MOK:
-        detectedFaces = 0
-        print("ASFDetectFaces {} fail: {}".format(img_url,res))
-    return detectedFaces
+    res, detectedFaces1 = face_engine.ASFDetectFaces(img)
+
+    print(f"{detectedFaces1}")
+    if res == MOK:
+        single_detected_face1 = ASF_SingleFaceInfo()
+        single_detected_face1.faceRect = detectedFaces1.faceRect[0]
+        single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
+        res, face_feature1 = face_engine.ASFFaceFeatureExtract(img, single_detected_face1)
+        number = 1
+        if (res != MOK):
+            number = 0
+            print("ASFFaceFeatureExtract 1 fail: {}".format(res))
+    else:
+        number = 0
+        print("ASFDetectFaces 1 fail: {}".format(res))
+    return number,img_url
