@@ -137,7 +137,7 @@ async def post_facesim(
                 "error": "Second image does not contain a detectable face",
                 "score": None
             }
-
+        ###
         result = getfacesim(img1_ori, img2_ori,image1,image2)
         print(f"{image1} and {image2} sim is {result}")
         output = {
