@@ -68,7 +68,7 @@ def find_faces_by_rotation(image_source):
     faces = detect_face_number_from_url(image_source)
 
     if faces != 0:
-        logging.info(f"Detected {len(faces)} face(s) 111111")
+        logging.info(f"Detected  face(s) 111111")
         output = image
     else:
         # 尝试旋转图像
@@ -78,7 +78,7 @@ def find_faces_by_rotation(image_source):
             faces_info = detect_face_number(rotated_image,image_source)
 
             if faces_info.faceNum != 0:
-                logging.info(f"Detected {len(faces)} face(s) at angle {angle} degrees.")
+                logging.info(f"Detected  face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
 
                 return rotated_image
