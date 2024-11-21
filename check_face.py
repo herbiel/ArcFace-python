@@ -68,7 +68,6 @@ def find_faces_by_rotation(image_source):
     if faces:
         logging.info(f"Detected {len(faces)} face(s) 111111")
         output = image
-        return output
     else:
         # 尝试旋转图像
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
@@ -84,6 +83,7 @@ def find_faces_by_rotation(image_source):
                 output = cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)
                 return output  # 检测到人脸时立即返回
     logging.warning("No faces detected after rotating through all angles.222222")
+    print(f"output is {output}")
     return output  # 最后如果仍未检测到人脸，返回 None
 
 # 调用函数，传入图像的 URL 或本地路径
