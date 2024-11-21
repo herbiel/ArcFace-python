@@ -74,7 +74,6 @@ def detect_face_number_from_url(img_url):
     return faceNum
 
 def detect_face_number(img,img_url):
-    img = read_image_from_url(img)
     # 检测第一张图中的人脸
     res, detectedFaces = face_engine.ASFDetectFaces(img)
 

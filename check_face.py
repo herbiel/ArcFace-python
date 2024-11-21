@@ -31,7 +31,6 @@ def rotate_image(image, angle):
     center = (width // 2, height // 2)
     rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
-    # 将旋转后的图像编码为内存中的字节数据
     return cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)
 
 def detect_faces_dlib(image):
