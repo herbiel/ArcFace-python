@@ -67,10 +67,11 @@ def get_face_feature_from_url(img_url):
         single_detected_face1.faceRect = detectedFaces1.faceRect[0]
         single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
         res, face_feature1 = face_engine.ASFFaceFeatureExtract(img, single_detected_face1)
-        number = 1
         if (res != MOK):
             number = 0
             print("ASFFaceFeatureExtract 1 fail: {}".format(res))
+        else:
+            number = 1
     else:
         number = 0
         print("ASFDetectFaces 1 fail: {}".format(res))
@@ -86,10 +87,11 @@ def get_face_feature(img,img_url):
         single_detected_face1.faceRect = detectedFaces1.faceRect[0]
         single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
         res, face_feature1 = face_engine.ASFFaceFeatureExtract(img, single_detected_face1)
-        number = 1
         if (res != MOK):
             number = 0
             print("ASFFaceFeatureExtract 1 fail: {}".format(res))
+        else:
+            number = 1
     else:
         number = 0
         print("ASFDetectFaces 1 fail: {}".format(res))

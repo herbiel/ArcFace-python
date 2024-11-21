@@ -6,16 +6,8 @@
 @Author  ：herbiel
 @Date    ：2024/11/15 10:53 
 '''
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-'''
-@Project ：ArcFace-python 
-@File    ：check_face.py
-@Author  ：herbiel
-@Date    ：2024/11/15 10:53 
-'''
 import cv2
-import dlib
+#import dlib
 import numpy as np
 import requests
 from io import BytesIO
