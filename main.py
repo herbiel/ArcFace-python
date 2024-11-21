@@ -125,8 +125,8 @@ async def post_facesim(
     try:
         img1_ori = find_faces_by_rotation(image1)
         img2_ori = find_faces_by_rotation(image2)
-        print(img1_ori)
-        print(img2_ori)
+        print(f"img1_ori is {img1_ori}")
+        print(f"img2_ori is {img2_ori}")
         if img1_ori is None or img1_ori.size == 0:
             return {
                 "code": 200,
