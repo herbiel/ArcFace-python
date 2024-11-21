@@ -93,7 +93,7 @@ def find_faces_by_rotation(image_source):
                 logging.info(f"Detected  face(s) at angle {angle} degrees.")
                 # 标注检测到的人脸
 
-                return face_number.faceNum,rotated_image
+                return face_number,rotated_image
 
 
 # 调用函数，传入图像的 URL 或本地路径
