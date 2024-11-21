@@ -83,8 +83,8 @@ def find_faces_by_rotation(image_source):
                     cv2.rectangle(rotated_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 return cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)  # 返回检测到人脸的图像
 
-    logging.warning("No faces detected after rotating through all angles.")
-    return None  # 如果没有检测到人脸，返回 None
+        logging.warning("No faces detected after rotating through all angles.")
+        return None  # 如果没有检测到人脸，返回 None
 
 # 调用函数，传入图像的 URL 或本地路径
 # img = find_faces_by_rotation('https://monas-001.oss-ap-southeast-5.aliyuncs.com/image/025166536f5138cc493e71736ece4da1.jpeg')
