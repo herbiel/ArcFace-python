@@ -142,7 +142,7 @@ async def post_facesim(
             print(f"{image1} and {image2} sim is {result}")
             output = {
                         "code": 200,
-                        "error": ""None"",
+                        "error": "None",
                         "score": str(result)
                     }
         elif num1 != 1 and num2 != 1:
