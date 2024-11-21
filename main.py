@@ -54,6 +54,19 @@ async def startup_event():
 
 
 # Define a Pydantic model for the request body
+def read_image_from_url(url):
+    # Fetch the image from the URL
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an error for bad responses
+
+    # Convert the image data to a NumPy array
+    image_array = np.asarray(bytearray(response.content), dtype=np.uint8)
+
+    # Decode the image array into an OpenCV format
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+
+    return image
+
 
 def getfacesim(img1, img2,img1_url,img2_url):
     face_feature1 = None
@@ -113,6 +126,15 @@ def getfacesim(img1, img2,img1_url,img2_url):
     res, score = face_engine.ASFFaceFeatureCompare(face_feature1, face_feature2)
     return score  # 返回相似度得分
 
+def check_face(img):
+    res, detectedFaces = face_engine.ASFDetectFaces(img)
+    if res==MOK:
+        return detectedFaces.faceNum
+    else:
+        print("ASFDetectFaces  fail: {}".format(res))
+        return None
+
+
 
 # Define a POST endpoint
 @app.post("/api/predict/facesmi")
@@ -123,17 +145,17 @@ async def post_facesim(
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
-        img1_ori = find_faces_by_rotation(image1)
-        img2_ori = find_faces_by_rotation(image2)
-        print(f"img1_ori is {img1_ori}")
-        print(f"img2_ori is {img2_ori}")
-        if img1_ori is None or img1_ori.size == 0:
+        img1_ori = read_image_from_url(image1)
+        img2_ori = read_image_from_url(image2)
+        facenumber1 = check_face (img1_ori)
+        facenumber2 = check_face(img1_ori)
+        if img1_ori is None or facenumber1 == 0:
             return {
                 "code": 200,
                 "error": "First image does not contain a detectable face",
                 "score": None
             }
-        if img2_ori is None or img2_ori.size == 0:
+        if img2_ori is None or facenumber2 == 0:
             return {
                 "code": 200,
                 "error": "Second image does not contain a detectable face",
