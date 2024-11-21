@@ -85,6 +85,7 @@ def find_faces_by_rotation(image_source):
                 # 标注检测到的人脸
 
                 return face_number,rotated_image
+        return 0, rotated_image
 
 
 # 调用函数，传入图像的 URL 或本地路径
