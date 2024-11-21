@@ -31,7 +31,13 @@ def rotate_image(image, angle):
     center = (width // 2, height // 2)
     rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
-    return rotated_image
+    # 将旋转后的图像编码为内存中的字节数据
+    success, buffer = cv2.imencode('.jpg', rotated_image)
+    if not success:
+        raise ValueError("Failed to encode the image.")
+
+    # 解码内存中的字节数据为图像对象（模拟 cv2.imread 的行为）
+    return cv2.imdecode(np.frombuffer(buffer, np.uint8), cv2.IMREAD_COLOR)
 
 def detect_faces_dlib(image):
     """使用 Dlib 检测人脸"""
