@@ -68,7 +68,7 @@ def find_faces_by_rotation(image_source):
     if faces:
         logging.info(f"Detected {len(faces)} face(s) 111111")
         output = image
-        return output  # 直接返回结果，避免继续处理
+        return output
     else:
         # 尝试旋转图像
         for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
