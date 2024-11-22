@@ -12,6 +12,7 @@ from arcface.engine import *
 import requests
 import numpy as np
 from config import  APPID,SDKKey
+from check_face import  load_image
 
 
 # 激活接口,首次需联网激活
@@ -58,7 +59,7 @@ def read_image_from_url(url):
 
 
 def get_face_feature_from_url(img_url):
-    img = read_image_from_url(img_url)
+    img = load_image(img_url)
     res, detectedFaces = face_engine.ASFDetectFaces(img)
 
     print(f"{detectedFaces}")
