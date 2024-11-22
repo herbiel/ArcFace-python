@@ -12,7 +12,10 @@ from arcface.engine import *
 import requests
 import numpy as np
 from config import  APPID,SDKKey
-from check_face import load_image
+from io import BytesIO
+from PIL import Image
+import logging
+
 
 
 
@@ -58,7 +61,23 @@ def read_image_from_url(url):
 
     return image
 
+def load_image(image_source):
+    """加载图像，可以是 URL 或本地路径"""
+    try:
+        if image_source.startswith(('http://', 'https://')):
+            response = requests.get(image_source)
+            response.raise_for_status()  # 检查请求是否成功
+            image = Image.open(BytesIO(response.content))
+            image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        else:
+            image = cv2.imread(image_source)
 
+        if image is None:
+            raise ValueError("Error: Image not found or unable to read.")
+        return image
+    except Exception as e:
+        logging.error(f"Failed to load image from {image_source}: {e}")
+        return None
 def get_face_feature_from_url(img_url):
     img = load_image(img_url)
     res, detectedFaces = face_engine.ASFDetectFaces(img)
