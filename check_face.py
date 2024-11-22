@@ -74,7 +74,7 @@ def find_faces_by_rotation(image_source):
         return faces,image
     else:
         # 尝试旋转图像
-        for angle in range(90, 360, 90):  # 从90度开始，避免重复检测原始图像
+        for angle in range(0, 360, 90):  # 从90度开始，避免重复检测原始图像
             rotated_image = rotate_image(image, angle)
             #faces = detect_faces_dlib(rotated_image)
             face_number = get_face_feature(rotated_image,image_source)
