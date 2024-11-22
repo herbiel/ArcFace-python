@@ -82,7 +82,7 @@ def get_face_feature_from_url(img_url):
     img = load_image(img_url)
     res, detectedFaces = face_engine.ASFDetectFaces(img)
 
-    print(f"{detectedFaces}")
+    logging.error(f"img url  {img_url} detectedFaces Info is : {detectedFaces}")
     if res == MOK:
         single_detected_face = ASF_SingleFaceInfo()
         single_detected_face.faceRect = detectedFaces.faceRect[0]
@@ -90,19 +90,19 @@ def get_face_feature_from_url(img_url):
         res, face_feature = face_engine.ASFFaceFeatureExtract(img, single_detected_face)
         if (res != MOK):
             number = 0
-            print("ASFFaceFeatureExtract 1 fail: {}".format(res))
+            print("{} ASFFaceFeatureExtract  fail: {}".format(img_url,res))
         else:
             number = 1
     else:
         number = 0
-        print("ASFDetectFaces 1 fail: {}".format(res))
+        print("{} ASFFaceFeatureExtract  fail: {}".format(img_url,res))
     return number
 def get_face_feature(img,img_url):
     # 检测第一张图中的人脸
 
     res, detectedFaces = face_engine.ASFDetectFaces(img)
 
-    print(f"{detectedFaces}")
+    logging.error(f"img url  {img_url} detectedFaces Info is : {detectedFaces}")
     if res == MOK:
         single_detected_face = ASF_SingleFaceInfo()
         single_detected_face.faceRect = detectedFaces.faceRect[0]
@@ -110,10 +110,10 @@ def get_face_feature(img,img_url):
         res, face_feature = face_engine.ASFFaceFeatureExtract(img, single_detected_face)
         if (res != MOK):
             number = 0
-            print("ASFFaceFeatureExtract  fail: {}".format(res))
+            print("{} ASFFaceFeatureExtract  fail: {}".format(img_url,res))
         else:
             number = 1
     else:
         number = 0
-        print("ASFDetectFaces  fail: {}".format(res))
+        print("{} ASFDetectFaces  fail: {}".format(img_url,res))
     return number
