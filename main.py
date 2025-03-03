@@ -161,6 +161,7 @@ async def post_facesim(
             "score": None
         }
     finally:
+        del img1_ori, img2_ori, num1, num2
         gc.collect()  # 手动释放内存
 @app.post("/check_status")
 async def check(status_code=status.HTTP_200_OK):
