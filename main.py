@@ -7,6 +7,7 @@
 @Date    ：2024/11/12 15:31 
 '''
 import gc
+import cv2
 from fastapi import FastAPI,Body,HTTPException,status
 from check_face import find_faces_by_rotation
 app = FastAPI()
@@ -119,6 +120,7 @@ async def post_facesim(
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
+        img1_ori, img2_ori = None, None  # 先初始化变量，防止 UnboundLocalError
         num1,img1_ori = find_faces_by_rotation(image1)
         num2,img2_ori = find_faces_by_rotation(image2)
         if num1 != 1 and num2 != 1:
@@ -161,7 +163,12 @@ async def post_facesim(
             "score": None
         }
     finally:
-        del img1_ori, img2_ori, num1, num2
+        # 释放 OpenCV 资源
+        if img1_ori is not None and isinstance(img1_ori, (cv2.UMat, cv2.Mat)):
+            del img1_ori
+        if img2_ori is not None and isinstance(img2_ori, (cv2.UMat, cv2.Mat)):
+            del img2_ori
+        del num1, num2
         gc.collect()  # 手动释放内存
 @app.post("/check_status")
 async def check(status_code=status.HTTP_200_OK):
