@@ -165,13 +165,8 @@ async def post_facesim(
             "score": None
         }
     finally:
-        # 释放 OpenCV 资源
-        if img1_ori is not None and isinstance(img1_ori, (cv2.UMat, cv2.Mat)):
-            del img1_ori
-        if img2_ori is not None and isinstance(img2_ori, (cv2.UMat, cv2.Mat)):
-            del img2_ori
-        if num1 and num2:
-            del num1, num2
+
+        del num1, num2, img1_ori, img2_ori
         gc.collect()  # 手动释放内存
 @app.post("/check_status")
 async def check(status_code=status.HTTP_200_OK):
