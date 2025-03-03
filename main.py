@@ -121,6 +121,8 @@ async def post_facesim(
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
         img1_ori, img2_ori = None, None  # 先初始化变量，防止 UnboundLocalError
+        num1 = 0
+        num2 = 0
         num1,img1_ori = find_faces_by_rotation(image1)
         num2,img2_ori = find_faces_by_rotation(image2)
         if num1 != 1 and num2 != 1:
