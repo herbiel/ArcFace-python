@@ -64,30 +64,28 @@ def read_image_from_url(url):
 def find_faces_by_rotation(image_source):
     """顺时针旋转图像直到检测到人脸"""
     output = None
-    try:
-        image = load_image(image_source)
-        #print(f"load image is {image}")
-        # 尝试检测原始图像中的人脸
-        #faces = detect_faces_dlib(image)
-        faces = get_face_feature_from_url(image_source)
-        logging.info(f"{image_source} Detected result {faces}")
-        if faces == 1:
-            return faces,image
-        else:
-            # 尝试旋转图像
-            for angle in range(0, 360, 90):  # 从90度开始，避免重复检测原始图像
-                rotated_image = rotate_image(image, angle)
-                #faces = detect_faces_dlib(rotated_image)
-                face_number = get_face_feature(rotated_image,image_source)
-                logging.info(f"Detected  face_number  at angle {angle} degrees.And face_number is {face_number}")
-                if face_number == 1:
-                    print(f"faces_info.faceNum is {face_number}")
-                    logging.info(f"Detected  face(s) at angle {angle} degrees.")
-                    # 标注检测到的人脸
-                    return face_number,rotated_image
-            return 0, rotated_image
-    finally:
-        cv2.destroyAllWindows()
+    image = load_image(image_source)
+    #print(f"load image is {image}")
+    # 尝试检测原始图像中的人脸
+    #faces = detect_faces_dlib(image)
+    faces = get_face_feature_from_url(image_source)
+    logging.info(f"{image_source} Detected result {faces}")
+    if faces == 1:
+        return faces,image
+    else:
+        # 尝试旋转图像
+        for angle in range(0, 360, 90):  # 从90度开始，避免重复检测原始图像
+            rotated_image = rotate_image(image, angle)
+            #faces = detect_faces_dlib(rotated_image)
+            face_number = get_face_feature(rotated_image,image_source)
+            logging.info(f"Detected  face_number  at angle {angle} degrees.And face_number is {face_number}")
+            if face_number == 1:
+                print(f"faces_info.faceNum is {face_number}")
+                logging.info(f"Detected  face(s) at angle {angle} degrees.")
+                # 标注检测到的人脸
+                return face_number,rotated_image
+        return 0, rotated_image
+
 
 
 # 调用函数，传入图像的 URL 或本地路径
