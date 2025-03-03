@@ -6,12 +6,8 @@
 @Author  ：herbiel
 @Date    ：2024/11/12 15:31 
 '''
-from fastapi import FastAPI,Body,HTTPException
-import requests
-from io import BytesIO
-from PIL import Image
-import cv2
-import numpy as np
+import gc
+from fastapi import FastAPI,Body,HTTPException,status
 from check_face import find_faces_by_rotation
 app = FastAPI()
 
@@ -157,9 +153,15 @@ async def post_facesim(
                 "error": "Face Detect Fail",
                 "score": None
             }
+
     except Exception as e:
         return {
             "code": 500,
             "error": str(e),
             "score": None
         }
+    finally:
+        gc.collect()  # 手动释放内存
+@app.post("/check_status")
+async def check(status_code=status.HTTP_200_OK):
+    return 200

@@ -117,3 +117,29 @@ def get_face_feature(img,img_url):
         number = 0
         print("{} ASFDetectFaces  fail: {}".format(img_url,res))
     return number
+
+
+def extract_feature(image,img1_url):
+    face_feature = None
+
+    # 检测第一张图中的人脸
+
+
+    res, detectedFaces = face_engine.ASFDetectFaces(image)
+    if res == MOK and detectedFaces.faceRect:
+        single_detected_face = ASF_SingleFaceInfo()
+        single_detected_face.faceRect = detectedFaces.faceRect[0]
+        single_detected_face.faceOrient = detectedFaces.faceOrient[0]
+        res, face_feature = face_engine.ASFFaceFeatureExtract(image, single_detected_face)
+        if res == 90127:
+            print("Detected specific error code 90127, skipping further attempts for {}.".format(img1_url,))
+        elif res == 0:
+            pass
+        else:
+            print("ASFFaceFeatureExtract 1 on {} fail : {}".format(img1_url,res))
+    else:
+        print("ASFDetectFaces 1 fail for on {}: {}".format(img1_url, res))
+
+    if face_feature is None:
+        print("No valid face feature extracted from the first image.")
+        return None
