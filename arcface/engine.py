@@ -1,5 +1,5 @@
-from app.arcface import lib_func
-from app.arcface.struct_info import *
+from arcface import lib_func
+from arcface.struct_info import *
 from ctypes import *
 
 MOK=0  #函数调用成功状态码

@@ -1,4 +1,4 @@
-from app.arcface.struct_info import *
+from arcface.struct_info import *
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if platform=="win32":
     dll_msvcp = CDLL(r'{}/lib/msvcp120.dll'.format(root_dir))
