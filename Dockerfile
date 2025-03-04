@@ -4,11 +4,14 @@ FROM python:3.11
 # 设置工作目录
 WORKDIR /app
 
-COPY requirements.txt .
-# 安装依赖工具（cmake、g++、make）
-RUN apt update && apt install -y cmake g++ make libgl1 libglib2.0-0 && RUN pip install --no-cache-dir -r requirements.txt
-# 复制依赖文件并安装
+# 一次性安装所有必要的依赖，减少镜像层数
+RUN apt update && apt install -y --no-install-recommends \
+    cmake g++ make libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*  # 清理缓存，减小镜像大小
 
+# 复制依赖文件并安装 Python 包
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 复制应用代码
 COPY . .
