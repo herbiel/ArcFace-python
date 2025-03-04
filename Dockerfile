@@ -14,7 +14,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 复制应用代码
-COPY app/* .
+COPY . .
 
 # 设置默认运行命令
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8809", "--workers", "4"]
