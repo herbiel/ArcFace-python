@@ -117,6 +117,10 @@ async def post_facesim(
         image1: str = Body(embed=True,alias="image1", min_length=10),
         image2: str = Body(embed=True,alias="image2", min_length=10),
 ):
+    if "oss-ap-southeast-5" in image1 or "oss-ap-southeast-5" in image2:
+        image1_url = image1.replace("oss-ap-southeast-5.aliyuncs.com", "oss-ap-southeast-5-internal.aliyuncs.com")
+        image2_url = image2.replace("oss-ap-southeast-5.aliyuncs.com", "oss-ap-southeast-5-internal.aliyuncs.com")
+        print(f"image1_url: {image1_url},image2_url: {image2_url}")
     if not image1 or not image2:
         raise HTTPException(status_code=422, detail="Request Error, invalid image")
     try:
