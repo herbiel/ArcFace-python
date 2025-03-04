@@ -5,7 +5,6 @@ FROM python:3.11
 WORKDIR /app
 
 # 安装依赖工具（cmake、g++、make）
-RUN apt update && apt install -y cmake g++ make
 
 # 复制依赖文件并安装
 COPY requirements.txt .
