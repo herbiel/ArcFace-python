@@ -7,7 +7,6 @@
 @Date    ：2024/11/15 10:53 
 '''
 import cv2
-#import dlib
 import numpy as np
 import requests
 from io import BytesIO
@@ -41,12 +40,7 @@ def rotate_image(image, angle):
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
     return cv2.cvtColor(rotated_image, cv2.COLOR_BGR2RGB)
 
-def detect_faces_dlib(image):
-    """使用 Dlib 检测人脸"""
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    detector = dlib.get_frontal_face_detector()
-    faces = detector(gray_image)
-    return faces
+
 
 def load_image(image_source):
     """加载图像，可以是 URL 或本地路径"""

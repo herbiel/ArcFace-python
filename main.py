@@ -175,3 +175,83 @@ async def post_facesim(
 @app.post("/check_status")
 async def check(status_code=status.HTTP_200_OK):
     return 200
+
+
+def getfaceinfo(img1,img1_url):
+    res, detectedFaces1 = face_engine.ASFDetectFaces(img1)
+    if res == MOK and detectedFaces1.faceRect:
+        single_detected_face1 = ASF_SingleFaceInfo()
+        single_detected_face1.faceRect = detectedFaces1.faceRect[0]
+        single_detected_face1.faceOrient = detectedFaces1.faceOrient[0]
+        res, face_feature1 = face_engine.ASFFaceFeatureExtract(img1, single_detected_face1)
+        if res == 90127:
+            print("Detected specific error code 90127, skipping further attempts for {}.".format(img1_url,))
+        elif res == 0:
+            pass
+        else:
+            print("ASFFaceFeatureExtract 1 on {} fail : {}".format(img1_url,res))
+    else:
+        print("ASFDetectFaces 1 fail for on {}: {}".format(img1_url, res))
+
+    if face_feature1 is None:
+        print("No valid face feature extracted from the first image.")
+        return None
+    # 检测第一张图中的人脸
+    processMask = ASF_AGE | ASF_GENDER
+    Gender,Age = None,None
+    res = face_engine.ASFProcess(img1,detectedFaces1,processMask)
+    if res == MOK:
+        # 获取年龄
+        res, ageInfo = face_engine.ASFGetAge()
+        if (res != MOK):
+            print("ASFGetAge fail: {}".format(res))
+        else:
+            print("Age: {}".format(ageInfo.ageArray[0]))
+            Age = ageInfo.ageArray[0]
+
+        # 获取性别
+        res, genderInfo = face_engine.ASFGetGender()
+        if (res != MOK):
+            print("ASFGetGender fail: {}".format(res))
+        else:
+            print("Gender: {}".format(genderInfo.genderArray[0]))
+            Gender = genderInfo.genderArray[0]
+    else:
+        Age = None,
+        Gender = None
+    return Age,Gender
+
+
+@app.post("/api/predict/GetFaceInfo")
+async def post_faceinfo(
+        image1: str = Body(embed=True,alias="image1", min_length=10),
+):
+    if "oss-ap-southeast-5" in image1 :
+        image1 = image1.replace("oss-ap-southeast-5.aliyuncs.com", "oss-ap-southeast-5-internal.aliyuncs.com")
+        #print(f"image1_url: {image1_url},image2_url: {image2_url}")
+    if not image1:
+        raise HTTPException(status_code=422, detail="Request Error, invalid image")
+    try:
+        num1,img1_ori = find_faces_by_rotation(image1)
+        if num1 != 1:
+            return {
+                "code": 200,
+                "error": "ALL image does not contain a detectable face",
+                "score": None
+            }
+        Age,Gender = getfaceinfo(img1_ori,image1)
+        return {
+            "code": 200,
+            "Age": Age,
+            "Gende": Gender,
+        }
+    except Exception as e:
+        return {
+            "code": 500,
+            "error": str(e),
+            "score": None
+        }
+    finally:
+
+        del num1,  img1_ori
+        gc.collect()  # 手动释放内存
