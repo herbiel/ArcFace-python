@@ -17,6 +17,22 @@ from detect_face import get_face_feature_from_url,get_face_feature
 # 设置日志记录
 logging.basicConfig(level=logging.INFO)
 
+
+def pad_image_to_multiple_of_4(image):
+    """Ensure the image width is a multiple of 4 by padding with black pixels on the right side."""
+    height, width = image.shape[:2]
+    padding = (4 - (width % 4)) % 4
+    image = cv2.copyMakeBorder(
+        image,
+        top=0,
+        bottom=0,
+        left=0,
+        right=padding,
+        borderType=cv2.BORDER_CONSTANT,
+        value=[0, 0, 0]  # Pad with black pixels
+    )
+    return image
+
 def rotate_image(image, angle):
     """旋转图像到指定角度"""
     height, width = image.shape[:2]
@@ -65,6 +81,7 @@ def find_faces_by_rotation(image_source):
     """顺时针旋转图像直到检测到人脸"""
     output = None
     image = load_image(image_source)
+    image = pad_image_to_multiple_of_4(image)
     #print(f"load image is {image}")
     # 尝试检测原始图像中的人脸
     #faces = detect_faces_dlib(image)
