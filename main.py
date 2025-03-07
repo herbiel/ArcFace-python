@@ -38,7 +38,7 @@ async def startup_event():
     face_engine = ArcFace()
 
     # 需要引擎开启的功能
-    mask = ASF_FACE_DETECT | ASF_FACERECOGNITION
+    mask = ASF_FACE_DETECT | ASF_FACERECOGNITION|ASF_AGE | ASF_GENDER
 
     # 初始化接口
     res = face_engine.ASFInitEngine(ASF_DETECT_MODE_IMAGE, ASF_OP_0_ONLY, 30, 10, mask)
