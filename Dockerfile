@@ -1,20 +1,21 @@
-# 使用官方 Python 3.11 基础镜像
-FROM python:3.11
+FROM python:3.8-slim
 
-# 设置工作目录
 WORKDIR /app
 
-# 一次性安装所有必要的依赖，减少镜像层数
-RUN apt update && apt install -y --no-install-recommends \
-    cmake g++ make libgl1 libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*  # 清理缓存，减小镜像大小
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# 复制依赖文件并安装 Python 包
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# 复制应用代码
+# 复制项目文件
 COPY . .
 
-# 设置默认运行命令
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8809", "--workers", "4"]
+# 安装Python依赖
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 暴露端口
+EXPOSE 8000
+
+# 启动命令
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
