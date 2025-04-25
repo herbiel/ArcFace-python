@@ -6,3 +6,4 @@ config.py
 .idea
 ../.DS_Store
 test.py
+.env

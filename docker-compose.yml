@@ -8,4 +8,6 @@ services:
       - ./lib:/app/lib
     environment:
       - TZ=Asia/Shanghai
+      - ARCFACE_APPID=${ARCFACE_APPID}
+      - ARCFACE_SDKKEY=${ARCFACE_SDKKEY}
     restart: unless-stopped

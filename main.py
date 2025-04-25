@@ -8,11 +8,19 @@
 '''
 import gc
 import cv2
+import os
 from fastapi import FastAPI,Body,HTTPException,status
 from check_face import find_faces_by_rotation
 app = FastAPI()
 
 from  arcface.engine import *
+
+# 从环境变量读取 APPID 和 SDKKey
+APPID = os.getenv('ARCFACE_APPID')
+SDKKey = os.getenv('ARCFACE_SDKKEY')
+
+if not APPID or not SDKKey:
+    raise ValueError("环境变量 ARCFACE_APPID 和 ARCFACE_SDKKEY 必须设置")
 
 from config import  APPID,SDKKey
 
