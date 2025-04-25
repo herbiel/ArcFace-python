@@ -3,7 +3,7 @@ services:
   arcface:
     build: .
     ports:
-      - "8000:8000"
+      - "8804:8804"
     volumes:
       - ./lib:/app/lib
     environment:
